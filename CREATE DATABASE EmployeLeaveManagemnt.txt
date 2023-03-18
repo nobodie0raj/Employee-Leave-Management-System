@@ -1,0 +1,83 @@
+CREATE DATABASE EmployeLeaveManagementDBMS;
+
+USE EmployeLeaveManagementDBMS;
+
+CREATE TABLE company (
+  id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  address VARCHAR(255),
+  phone VARCHAR(15),
+  email VARCHAR(255),
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE user_login (
+  id INT NOT NULL AUTO_INCREMENT,
+  username VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  company_id INT NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (company_id) REFERENCES company(id)
+);
+
+CREATE TABLE employee (
+  id INT NOT NULL AUTO_INCREMENT,
+  first_name VARCHAR(255) NOT NULL,
+  last_name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  phone VARCHAR(15),
+  address VARCHAR(255),
+  company_id INT NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (company_id) REFERENCES company(id)
+);
+
+CREATE TABLE role (
+  id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  description VARCHAR(255),
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE `leave` (
+  id INT NOT NULL AUTO_INCREMENT,
+  employee_id INT NOT NULL,
+  start_date DATE NOT NULL,
+  end_date DATE NOT NULL,
+  reason VARCHAR(255),
+  status ENUM('pending', 'approved', 'rejected'),
+  PRIMARY KEY (id),
+  FOREIGN KEY (employee_id) REFERENCES employee(id)
+);
+
+CREATE TABLE login_session (
+  id INT NOT NULL AUTO_INCREMENT,
+  employee_id INT NOT NULL,
+  login_time DATETIME NOT NULL,
+  logout_time DATETIME,
+  PRIMARY KEY (id),
+  FOREIGN KEY (employee_id) REFERENCES employee(id)
+);
+
+INSERT INTO company (name, email, phone)
+VALUES ('DBMS Corporation', 'DBMS@gmail.com', '+15551234');
+
+INSERT INTO employee (first_name, last_name, email, phone, address, company_id)
+VALUES ('Raj', 'Bhardwaj', 'rajbhardwaj@gmail.com', '2525257839', '123 Main St, Pune, India', 1);
+
+INSERT INTO user_login (username, password, company_id)
+VALUES ('rajbhardwaj', 'password123', 1);
+
+INSERT INTO employee (first_name, last_name, email, phone, address, company_id)
+VALUES ('Payal', 'Agrawal', 'payalagrawal@gmail.com', '9988997657', '456 mg road, Pune, India', 1);
+
+INSERT INTO user_login (username, password, company_id)
+VALUES ('payalagrawal', 'password123', 1);
+
+INSERT INTO role (name, description)
+VALUES ('admin', 'Administrative role with full access to the system');
+
+INSERT INTO `leave` (employee_id, start_date, end_date, reason, status)
+VALUES (1, '2023-03-20', '2023-03-22', 'Vacation', 'pending');
+
+SELECT * FROM employee WHERE company_id = 1;
